@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: DWD Widget
-Plugin URI: http://URI_Of_Page_Describing_Plugin_and_Updates
-Description: DWD Widget der FF Langenbruecken
+Plugin URI: http://github.com/mybecks/dwd_plugin
+Description: DWD Widget
 Version: 0.0.2
 Author: Andre Becker
 Author URI: la.ffbs.de
