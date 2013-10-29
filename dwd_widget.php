@@ -20,30 +20,49 @@ class DWD_Widget extends WP_Widget {
 		parent::__construct(
 	 		'dwd_widget', // Base ID
 			'DWD Widget', // Name
-			array( 'description' => __( 'Aktuelle Unwetterwarnungen vom Deutschen Wetter Dienst', 'text_domain' ), ) // Args
+			array( 'description' => __( 'Aktuelle Unwetterwarnungen vom Deutschen Wetter Dienst', 'dwd_textdomain' ), ) // Args
 		);
 	}
 
  	public function form( $instance ) {
 		// outputs the options form on admin
+		if ( isset( $instance[ 'title' ] ) ) {
+			$title = $instance[ 'title' ];
+		}
+		else {
+			$title = __( 'New title', 'dwd_textdomain' );
+		}
+		// Widget admin form
+		?>
+
+		<p>
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+		</p>
+		<?php
 	}
 
 	public function update( $new_instance, $old_instance ) {
 		// processes widget options to be saved
+		$instance = array();
+		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+		return $instance;
 	}
 
 	public function widget( $args, $instance ) {
+		$title = apply_filters( 'widget_title', $instance['title'] );
+		// before and after widget arguments are defined by themes
+		echo $args['before_widget'];
+		if ( ! empty( $title ) )
+		echo $args['before_title'] . $title . $args['after_title'];
 		// outputs the content of the widget
-		
-		$html = "<aside id='dwd-widget'>".
-					"<h3 class='widget-title'>Unwetterwarnungen</h3>".
-					"<figur>".
+		$html = 	"<figur>".
 						"<img src='http://www.dwd.de/dyn/app/ws/maps/SU_x_x_0.gif' alt='Unwetterkarte BW' width='100%' />".
 					"</figur>".
-					// "<a href='http://www.dwd.de/bvbw/appmanager/bvbw/dwdwwwDesktop?_nfpb=true&_windowLabel=T14600649251144330032285&_urlType=action&_pageLabel=_dwdwww_wetter_warnungen_warnungen&WEEKLY_REPORT_VIEW=false&TIME=x&SHOW_HEIGHT_SEL=true&MAP_VIEW=true&MOVIE_VIEW=false&TABLE_VIEW=false&HEIGHT=x&SHOW_TIME_SEL=true&STATIC_CONTENT_VIEW=false&WARNING_TYPE=0&LAND_CODE=SU' target='_blank'><img src='http://www.dwd.de/dyn/app/ws/maps/SU_x_x_0.gif' alt='Unwetterkarte BW' width='100%' /></a>".
-					"<a href='http://www.dwd.de/dyn/app/ws/html/reports/KAX_warning_de.html#WS_ANCHOR_0' target='_blank'>Warnlage - Karlsruhe</a>".
-				"</aside>";
-		print($html);
+					"<a href='http://www.dwd.de/dyn/app/ws/html/reports/KAX_warning_de.html#WS_ANCHOR_0' target='_blank'>Warnlage - Karlsruhe</a>";
+				
+		echo $html;
+		echo $args['after_widget'];
 
 		// Warnungen vor extremem Unwetter - color: rgb(175,0,100)
 
